@@ -7,19 +7,19 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 export const register = async (data) => {
-  const { email, password, name } = data;
+  const { username, password, name } = data;
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { username } });
 
   if (user) {
-    throw new Error("Email already exists");
+    throw new Error("Username already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   return await prisma.user.create({
     data: {
-      email,
+      username,
       password: hashedPassword,
       name,
     },
@@ -27,12 +27,12 @@ export const register = async (data) => {
 };
 
 export const login = async (data) => {
-  const { email, password } = data;
+  const { username, password } = data;
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { username } });
 
   if (!user) {
-    throw new Error("Email not found");
+    throw new Error("Username not found");
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
@@ -50,5 +50,5 @@ export const login = async (data) => {
 
 export const myProfile = async (id) => {
   const user = await prisma.user.findUnique({ where: { id } });
-  return { email: user.email, name: user.name };
+  return { username: user.username, name: user.name };
 };

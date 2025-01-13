@@ -17,10 +17,10 @@ export const register = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password, name } = req.body;
+  const { username, password, name } = req.body;
 
   try {
-    const user = await registerService({ email, password, name });
+    const user = await registerService({ username, password, name });
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -35,10 +35,10 @@ export const login = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const token = await loginService({ email, password });
+    const token = await loginService({ username, password });
     res.status(200).json(token);
   } catch (error) {
     res.status(500).json({ error: error.message });
